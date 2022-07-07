@@ -1,8 +1,6 @@
-from functools import cache
 import pandas as pd
-from flask import Flask, appcontext_popped, request
+from flask import Flask, request
 from flask_caching import Cache
-from flask_sqlalchemy import SQLAlchemy
 
 config = {
     "DEBUG": True,
