@@ -1,23 +1,26 @@
 from functools import cache
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, appcontext_popped, request
 from flask_caching import Cache
-import sqlite3
-
-# conn = sqlite3.connect('database.db')
-conn = sqlite3.connect('postgres://bnldrftkitqtcz:e5afac0e8b622ee526e47c4a99d9d96b32db11ab874074a1b2e03a55c39bce2b@ec2-34-233-115-14.compute-1.amazonaws.com:5432/ddat8bb5tpd501')
-
-df1 = pd.read_sql_query("SELECT * from inputData", conn)
-df = df1._convert(numeric=True)
+from flask_sqlalchemy import SQLAlchemy
 
 config = {
     "DEBUG": True,
     "CACHE_TYPE": "SimpleCache",
     "CACHE_DEFAULT_TIMEOUT": 300
 }
+
 app = Flask(__name__)
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# db = SQLAlchemy(app)
+
+# df1 = pd.read_sql_query("SELECT * from inputData", conn)
+# df = df1._convert(numeric=True)
 app.config.from_mapping(config)
 cache = Cache(app)
+
+df = pd.read_csv('greenhouse_gas_inventory_data_data.csv')
 
 @app.route('/countries', methods=['GET', 'POST'])
 def main(): 
